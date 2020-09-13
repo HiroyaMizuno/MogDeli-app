@@ -4,12 +4,16 @@ jobs:
     docker:
     - image: circleci/ruby:2.5.3-node-browsers
       environment:
+        - DB_HOST: 127.0.0.1
         - BUNDLER_VERSION: 2.0.2
-        - RAILS_ENV: 'test'
+        - RAILS_ENV: test
     - image: circleci/mysql:8.0
+      command: [--default-authentication-plugin=mysql_native_password]  #エラー対応：：Authentication plugin 'caching_sha2_password' cannot be loaded/Couldn't create 'app_name_test' database.
       environment:
         - MYSQL_ALLOW_EMPTY_PASSWORD: 'true'
         - MYSQL_ROOT_HOST: '127.0.0.1'
+        - MYSQL_USER: root
+        - MYSQL_DB: app_name_test
 
     working_directory: ~/portfolioApp  #自身のアプリディレクトリ名を設定  
 
@@ -64,3 +68,10 @@ jobs:
     - store_artifacts:
         path: /tmp/test-results
         destination: test-results
+    
+    - deploy:
+        name: Deploy Master to Heroku
+        command: |
+          if [ "${CIRCLE_BRANCH}" == "master" ]; then
+            git push https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME.git master
+          fi

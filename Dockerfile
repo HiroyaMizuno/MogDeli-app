@@ -4,7 +4,7 @@ FROM ruby:2.5.3
 RUN apt-get update -qq && \
     apt-get install -y build-essential \ 
                        libpq-dev \        
-                       nodejs           
+                       nodejs         
 
 # 作業ディレクトリの作成、設定
 RUN mkdir /app_name 
@@ -19,3 +19,6 @@ ADD ./Gemfile.lock $APP_ROOT/Gemfile.lock
 # Gemfileのbundle install
 RUN bundle install
 ADD . $APP_ROOT
+
+# Start the main process.
+CMD ["rails", "server", "-b", "0.0.0.0"]

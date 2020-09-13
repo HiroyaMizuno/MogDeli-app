@@ -6,8 +6,12 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: password
       MYSQL_DATABASE: root
+      RAILS_ENV: development
+      DATABASE_URL: mysql2://root:root@mysql:3306
     ports:
       - "3306:3306"
+    volumes:
+      - ./.data/db:/var/lib/mysql
 
   web:
     build: .
