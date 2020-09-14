@@ -11,7 +11,8 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - ./.data/db:/var/lib/mysql
+      - mysql-db-store:/var/lib/mysql
+  
 
   web:
     build: .
@@ -22,3 +23,6 @@ services:
       - "3000:3000"
     links:
       - db
+  
+  volumes:
+    mysql-db-store:
